@@ -16,7 +16,11 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
     }
 
     fun loadFacebookBannerAdSize50(placementId: String, containerView: LinearLayout) {
-        val adViewBanner = AdView(context, placementId, AdSize.BANNER_HEIGHT_50)
+        var formattedPlacementId = placementId
+        if (isDebugApp) {
+            formattedPlacementId = "IMG_16_9_APP_INSTALL$placementId"
+        }
+        val adViewBanner = AdView(context, formattedPlacementId, AdSize.BANNER_HEIGHT_50)
         if (isDebugApp && !TextUtils.isEmpty(deviceIdHash)) {
             AdSettings.addTestDevice(deviceIdHash)
         }

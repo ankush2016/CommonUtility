@@ -39,6 +39,7 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
         var formattedPlacementId = placementId
         if (isDebugApp) {
             formattedPlacementId = "YOUR_PLACEMENT_ID"
+            Log.d("ANKUSH", "formattedPlacementId = $formattedPlacementId")
         }
         interstitialAd = InterstitialAd(context, formattedPlacementId)
         val adListener = object : InterstitialAdListener {

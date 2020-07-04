@@ -10,6 +10,9 @@ import kotlin.collections.ArrayList
 
 class FacebookAdsUtility(private val context: Context, private val isDebugApp: Boolean, private val deviceIdHash: String?, private val installer: String?) {
 
+    private lateinit var adViewBanner: AdView
+    private lateinit var adViewMedRect: AdView
+
     init {
         AudienceNetworkAds.initialize(context)
         if (isDebugApp) {
@@ -25,12 +28,13 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
         if (isDebugApp) {
             formattedPlacementId = "IMG_16_9_APP_INSTALL#$placementId"
         }
-        val adViewBanner = AdView(context, formattedPlacementId, AdSize.BANNER_HEIGHT_50)
+        adViewBanner = AdView(context, formattedPlacementId, AdSize.BANNER_HEIGHT_50)
         if (isDebugApp && !TextUtils.isEmpty(deviceIdHash)) {
             AdSettings.addTestDevice(deviceIdHash)
         }
         containerView.addView(adViewBanner)
         adViewBanner.loadAd()
+        setAdListener(adViewBanner)
     }
 
     fun loadFacebookMedRect(placementId: String, containerView: LinearLayout) {
@@ -41,15 +45,16 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
         if (isDebugApp) {
             formattedPlacementId = "IMG_16_9_APP_INSTALL#$placementId"
         }
-        val adViewBanner = AdView(context, formattedPlacementId, AdSize.RECTANGLE_HEIGHT_250)
+        adViewMedRect = AdView(context, formattedPlacementId, AdSize.RECTANGLE_HEIGHT_250)
         if (isDebugApp && !TextUtils.isEmpty(deviceIdHash)) {
             AdSettings.addTestDevice(deviceIdHash)
         }
-        containerView.addView(adViewBanner)
-        adViewBanner.loadAd()
+        containerView.addView(adViewMedRect)
+        adViewMedRect.loadAd()
+        setAdListener(adViewMedRect)
     }
 
-    private fun setAdListener(adView: AdView){
+    private fun setAdListener(adView: AdView) {
         adView.setAdListener(object : AdListener {
             override fun onAdClicked(p0: Ad?) {
             }
@@ -75,5 +80,14 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
     private fun isAppDownloadFromPlayStore(): Boolean {
         val validInstallers: List<String> = ArrayList(listOf("com.android.vending", "com.google.android.feedback"))
         return !TextUtils.isEmpty(installer) && validInstallers.contains(installer)
+    }
+
+    fun destroyFbAds() {
+        if (::adViewBanner.isInitialized) {
+            adViewBanner.destroy()
+        }
+        if (::adViewMedRect.isInitialized) {
+            adViewMedRect.destroy()
+        }
     }
 }

@@ -4,10 +4,7 @@ import android.content.Context
 import android.text.TextUtils
 import android.util.Log
 import android.widget.LinearLayout
-import com.facebook.ads.AdSettings
-import com.facebook.ads.AdSize
-import com.facebook.ads.AdView
-import com.facebook.ads.AudienceNetworkAds
+import com.facebook.ads.*
 
 class FacebookAdsUtility(private val context: Context, private val isDebugApp: Boolean, private val deviceIdHash: String?) {
 
@@ -25,5 +22,25 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
         }
         containerView.addView(adViewBanner)
         adViewBanner.loadAd()
+        adViewBanner.setAdListener(object : AdListener {
+            override fun onAdClicked(p0: Ad?) {
+            }
+
+            override fun onError(p0: Ad?, p1: AdError?) {
+                if (isDebugApp) {
+                    Log.e("ANKUSH", "Fb - ${p1?.errorMessage}")
+                }
+            }
+
+            override fun onAdLoaded(p0: Ad?) {
+                if (isDebugApp) {
+                    Log.e("ANKUSH", "Ad loaded")
+                }
+            }
+
+            override fun onLoggingImpression(p0: Ad?) {
+            }
+
+        })
     }
 }

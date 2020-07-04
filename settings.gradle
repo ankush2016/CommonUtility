@@ -1,0 +1,3 @@
+rootProject.name='CommonUtility'
+include ':app'
+include ':app:commonutility'

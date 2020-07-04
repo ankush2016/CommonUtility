@@ -56,7 +56,7 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
 
             override fun onError(p0: Ad?, p1: AdError?) {
                 if (isDebugApp) {
-                    Log.e("ANKUSH", "INTERSTITIAL AD ERROR - ${p1?.errorMessage}")
+                    Log.e("ANKUSH", "INTERSTITIAL AD ERROR - ${p1?.errorMessage}, Error Code = ${p1?.errorCode}")
                 }
             }
 

@@ -2,6 +2,7 @@ package com.tools.commonutility.facebookads
 
 import android.content.Context
 import android.text.TextUtils
+import android.util.Log
 import android.widget.LinearLayout
 import com.facebook.ads.AdSettings
 import com.facebook.ads.AdSize
@@ -12,6 +13,9 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
 
     init {
         AudienceNetworkAds.initialize(context)
+        if (isDebugApp) {
+            Log.e("ANKUSH", "AudienceNetworkAds initialize")
+        }
     }
 
     fun loadFacebookBannerAdSize50(placementId: String, containerView: LinearLayout) {

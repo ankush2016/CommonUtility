@@ -5,19 +5,50 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.LinearLayout
 import com.facebook.ads.*
-import java.util.*
-import kotlin.collections.ArrayList
 
+/*
+    USAGE
+    private lateinit var facebookAdsUtility: FacebookAdsUtility
+
+    private fun setupFacebookAds() {
+        facebookAdsUtility = FacebookAdsUtility(this, BuildConfig.DEBUG, getString(R.string.test_device_id_hash), AppUtility.getInstallerPackageName(this))
+        facebookAdsUtility.loadFacebookMedRect(getString(R.string.fb_med_rect_ad_id), facebookBannerAdContainer)
+    }
+
+    override fun onDestroy() {
+        if (::facebookAdsUtility.isInitialized) {
+            facebookAdsUtility.destroyFbAds()
+        }
+        super.onDestroy()
+    }
+*/
 class FacebookAdsUtility(private val context: Context, private val isDebugApp: Boolean, private val deviceIdHash: String?, private val installer: String?) {
 
     private lateinit var adViewBanner: AdView
     private lateinit var adViewMedRect: AdView
+    private lateinit var interstitialAd: InterstitialAd
 
     init {
         AudienceNetworkAds.initialize(context)
         if (isDebugApp) {
             Log.e("ANKUSH", "AudienceNetworkAds initialize")
         }
+    }
+
+    fun setupFacebookInterstitialAds(placementId: String) {
+        var formattedPlacementId = placementId
+        if (isDebugApp) {
+            formattedPlacementId = "YOUR_PLACEMENT_ID"
+        }
+        interstitialAd = InterstitialAd(context, formattedPlacementId)
+        interstitialAd.loadAd()
+    }
+
+    private fun showFacebookInterstitialAd() {
+        if (::interstitialAd.isInitialized && interstitialAd.isAdLoaded && !interstitialAd.isAdInvalidated) {
+            interstitialAd.show()
+        }
+        interstitialAd.loadAd()
     }
 
     fun loadFacebookBannerAdSize50(placementId: String, containerView: LinearLayout) {
@@ -85,9 +116,21 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
     fun destroyFbAds() {
         if (::adViewBanner.isInitialized) {
             adViewBanner.destroy()
+            if (isDebugApp) {
+                Log.e("ANKUSH", "destroyed facebook banner ad")
+            }
         }
         if (::adViewMedRect.isInitialized) {
             adViewMedRect.destroy()
+            if (isDebugApp) {
+                Log.e("ANKUSH", "destroyed facebook med rect ad")
+            }
+        }
+        if (::interstitialAd.isInitialized) {
+            interstitialAd.destroy()
+            if (isDebugApp) {
+                Log.e("ANKUSH", "destroyed facebook interstitial ad")
+            }
         }
     }
 }

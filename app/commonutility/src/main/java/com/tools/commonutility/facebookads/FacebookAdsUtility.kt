@@ -45,10 +45,17 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
     }
 
     private fun showFacebookInterstitialAd() {
-        if (::interstitialAd.isInitialized && interstitialAd.isAdLoaded && !interstitialAd.isAdInvalidated) {
+        if (isInterstitialAdLoaded()) {
             interstitialAd.show()
         }
         interstitialAd.loadAd()
+    }
+
+    fun isInterstitialAdLoaded(): Boolean {
+        if (::interstitialAd.isInitialized && interstitialAd.isAdLoaded && !interstitialAd.isAdInvalidated) {
+            return true
+        }
+        return false
     }
 
     fun loadFacebookBannerAdSize50(placementId: String, containerView: LinearLayout) {

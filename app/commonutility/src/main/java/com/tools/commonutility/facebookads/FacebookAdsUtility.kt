@@ -31,7 +31,26 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
         }
         containerView.addView(adViewBanner)
         adViewBanner.loadAd()
-        adViewBanner.setAdListener(object : AdListener {
+    }
+
+    fun loadFacebookMedRect(placementId: String, containerView: LinearLayout) {
+        if (!isDebugApp && !isAppDownloadFromPlayStore()) {
+            return
+        }
+        var formattedPlacementId = placementId
+        if (isDebugApp) {
+            formattedPlacementId = "IMG_16_9_APP_INSTALL#$placementId"
+        }
+        val adViewBanner = AdView(context, formattedPlacementId, AdSize.RECTANGLE_HEIGHT_250)
+        if (isDebugApp && !TextUtils.isEmpty(deviceIdHash)) {
+            AdSettings.addTestDevice(deviceIdHash)
+        }
+        containerView.addView(adViewBanner)
+        adViewBanner.loadAd()
+    }
+
+    private fun setAdListener(adView: AdView){
+        adView.setAdListener(object : AdListener {
             override fun onAdClicked(p0: Ad?) {
             }
 
@@ -53,14 +72,8 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
         })
     }
 
-    fun isAppDownloadFromPlayStore(): Boolean {
-        // A list with valid installers package name
-        val validInstallers: List<String> = ArrayList(Arrays.asList("com.android.vending", "com.google.android.feedback"))
-
-        // The package name of the app that has installed your app
-        //val installer = context.packageManager.getInstallerPackageName(context.packageName)
-
-        // true if your app has been downloaded from Play Store
+    private fun isAppDownloadFromPlayStore(): Boolean {
+        val validInstallers: List<String> = ArrayList(listOf("com.android.vending", "com.google.android.feedback"))
         return !TextUtils.isEmpty(installer) && validInstallers.contains(installer)
     }
 }

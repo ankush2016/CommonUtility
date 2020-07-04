@@ -26,7 +26,7 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
 
     private lateinit var adViewBanner: AdView
     private lateinit var adViewMedRect: AdView
-    private lateinit var interstitialAd: InterstitialAd
+    lateinit var interstitialAd: InterstitialAd
 
     init {
         AudienceNetworkAds.initialize(context)

@@ -32,6 +32,7 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
         AudienceNetworkAds.initialize(context)
         if (isDebugApp) {
             Log.e("ANKUSH", "AudienceNetworkAds initialize")
+            AdSettings.setTestMode(true)
         }
     }
 

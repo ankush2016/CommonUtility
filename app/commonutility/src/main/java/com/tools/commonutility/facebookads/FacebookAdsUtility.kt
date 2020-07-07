@@ -36,7 +36,7 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
         }
     }
 
-    fun setupFacebookInterstitialAds(placementId: String, fbInterstitialAdListener: FbInterstitialAdListener) {
+    fun setupFacebookInterstitialAds(placementId: String, fbInterstitialAdListener: FbInterstitialAdListener, fbInterstitialAdData: FbInterstitialAdData<Any>?) {
         var formattedPlacementId = placementId
         if (isDebugApp) {
             formattedPlacementId = "YOUR_PLACEMENT_ID"
@@ -52,7 +52,8 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
             }
 
             override fun onInterstitialDismissed(p0: Ad?) {
-                fbInterstitialAdListener.onInterstitialDismissed()
+                fbInterstitialAdListener.onInterstitialDismissed(fbInterstitialAdData)
+                interstitialAd.loadAd()
             }
 
             override fun onError(p0: Ad?, p1: AdError?) {
@@ -78,7 +79,6 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
         if (isInterstitialAdLoaded()) {
             interstitialAd.show()
         }
-        interstitialAd.loadAd()
     }
 
     fun isInterstitialAdLoaded(): Boolean {

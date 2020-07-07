@@ -27,6 +27,10 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
     private lateinit var adViewBanner: AdView
     private lateinit var adViewMedRect: AdView
     lateinit var interstitialAd: InterstitialAd
+    lateinit var adListener: InterstitialAdListener
+
+    lateinit var fbInterstitialAdListener: FbInterstitialAdListener
+    var fbInterstitialAdData: FbInterstitialAdData<Any>? = null
 
     init {
         AudienceNetworkAds.initialize(context)
@@ -36,14 +40,14 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
         }
     }
 
-    fun setupFacebookInterstitialAds(placementId: String, fbInterstitialAdListener: FbInterstitialAdListener, fbInterstitialAdData: FbInterstitialAdData<Any>?) {
+    fun setupFacebookInterstitialAds(placementId: String) {
         var formattedPlacementId = placementId
         if (isDebugApp) {
             formattedPlacementId = "YOUR_PLACEMENT_ID"
             Log.d("ANKUSH", "formattedPlacementId = $formattedPlacementId")
         }
         interstitialAd = InterstitialAd(context, formattedPlacementId)
-        val adListener = object : InterstitialAdListener {
+        adListener = object : InterstitialAdListener {
             override fun onInterstitialDisplayed(p0: Ad?) {
 
             }
@@ -51,9 +55,9 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
             override fun onAdClicked(p0: Ad?) {
             }
 
-            override fun onInterstitialDismissed(p0: Ad?) {
+            override fun onInterstitialDismissed(ad: Ad?) {
                 fbInterstitialAdListener.onInterstitialDismissed(fbInterstitialAdData)
-                interstitialAd.loadAd()
+                ad?.loadAd()
             }
 
             override fun onError(p0: Ad?, p1: AdError?) {
@@ -75,7 +79,7 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
         interstitialAd.loadAd(loadConfig)
     }
 
-    fun showFacebookInterstitialAd() {
+    fun showFacebookInterstitialAd(fbInterstitialAdListener: FbInterstitialAdListener, fbInterstitialAdData: FbInterstitialAdData<Any>?) {
         if (isInterstitialAdLoaded()) {
             interstitialAd.show()
         }

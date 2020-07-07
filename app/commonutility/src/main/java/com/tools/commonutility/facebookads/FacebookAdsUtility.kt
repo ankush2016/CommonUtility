@@ -80,6 +80,8 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
     }
 
     fun showFacebookInterstitialAd(fbInterstitialAdListener: FbInterstitialAdListener, fbInterstitialAdData: FbInterstitialAdData<Any>?) {
+        this.fbInterstitialAdListener = fbInterstitialAdListener
+        this.fbInterstitialAdData = fbInterstitialAdData
         if (isInterstitialAdLoaded()) {
             interstitialAd.show()
         }

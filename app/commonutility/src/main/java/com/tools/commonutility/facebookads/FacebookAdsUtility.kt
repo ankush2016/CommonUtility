@@ -11,7 +11,7 @@ import com.facebook.ads.*
     private lateinit var facebookAdsUtility: FacebookAdsUtility
 
     private fun setupFacebookAds() {
-        facebookAdsUtility = FacebookAdsUtility(this, BuildConfig.DEBUG, getString(R.string.test_device_id_hash), AppUtility.getInstallerPackageName(this))
+        facebookAdsUtility = FacebookAdsUtility(this, BuildConfig.DEBUG, AppConstants.TEST_DEVICE_ID_HASH, AppUtility.getInstallerPackageName(this))
         facebookAdsUtility.loadFacebookMedRect(getString(R.string.fb_med_rect_ad_id), facebookBannerAdContainer)
     }
 
@@ -41,6 +41,9 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
     }
 
     fun setupFacebookInterstitialAds(placementId: String) {
+        if (!isDebugApp && !isAppDownloadFromPlayStore()) {
+            return
+        }
         var formattedPlacementId = placementId
         if (isDebugApp) {
             formattedPlacementId = "YOUR_PLACEMENT_ID"

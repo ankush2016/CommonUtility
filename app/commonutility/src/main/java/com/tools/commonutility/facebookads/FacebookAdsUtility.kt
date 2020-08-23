@@ -32,6 +32,17 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
     lateinit var fbInterstitialAdListener: FbInterstitialAdListener
     var fbInterstitialAdData: FbInterstitialAdData<Any>? = null
 
+
+    companion object {
+        var mFacebookAdsUtility: FacebookAdsUtility? = null
+        fun getInstance(context: Context, isDebugApp: Boolean, deviceIdHash: String?, installer: String?): FacebookAdsUtility? {
+            if (mFacebookAdsUtility == null) {
+                mFacebookAdsUtility = FacebookAdsUtility(context, isDebugApp, deviceIdHash, installer)
+            }
+            return mFacebookAdsUtility
+        }
+    }
+
     init {
         AudienceNetworkAds.initialize(context)
         if (isDebugApp) {

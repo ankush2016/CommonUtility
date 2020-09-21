@@ -110,8 +110,7 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
             AdSettings.addTestDevice(deviceIdHash)
         }
         containerView.addView(adViewBanner)
-        adViewBanner.loadAd()
-        setAdListener(adViewBanner)
+        setAdListenerAndLoadAd(adViewBanner)
     }
 
     fun loadFacebookMedRect(placementId: String, containerView: LinearLayout) {
@@ -127,15 +126,11 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
             AdSettings.addTestDevice(deviceIdHash)
         }
         containerView.addView(adViewMedRect)
-        adViewMedRect.loadAd()
-        setAdListener(adViewMedRect)
+        setAdListenerAndLoadAd(adViewMedRect)
     }
 
-    private fun setAdListener(adView: AdView) {
-        adView.setAdListener(object : AdListener {
-            override fun onAdClicked(p0: Ad?) {
-            }
-
+    private fun setAdListenerAndLoadAd(adView: AdView) {
+        val adListener: AdListener = object :AdListener{
             override fun onError(p0: Ad?, p1: AdError?) {
                 if (isDebugApp) {
                     Log.e("ANKUSH", "Fb - ${p1?.errorMessage}")
@@ -148,10 +143,13 @@ class FacebookAdsUtility(private val context: Context, private val isDebugApp: B
                 }
             }
 
-            override fun onLoggingImpression(p0: Ad?) {
+            override fun onAdClicked(p0: Ad?) {
             }
 
-        })
+            override fun onLoggingImpression(p0: Ad?) {
+            }
+        }
+        adView.loadAd(adView.buildLoadAdConfig().withAdListener(adListener).build())
     }
 
     private fun isAppDownloadFromPlayStore(): Boolean {
